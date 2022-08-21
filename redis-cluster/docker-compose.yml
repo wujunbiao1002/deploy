@@ -1,0 +1,112 @@
+version: '3.9'
+services:
+  redis-node1:
+    image: 	redis:6.2.7-alpine
+    container_name: redis-node1
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 6379:6379
+    volumes:
+      - ./config:/usr/local/etc/redis
+      - node1_data:/data
+    networks:
+      redis:
+        ipv4_address: 172.18.0.2
+
+
+  redis-node2:
+    image: redis:6.2.7-alpine
+    container_name: redis-node2
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 6380:6379
+    volumes:
+      - ./config:/usr/local/etc/redis
+      - node2_data:/data
+    networks:
+      redis:
+        ipv4_address: 172.18.0.3
+
+  redis-node3:
+    image: redis:6.2.7-alpine
+    container_name: redis-node3
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 6381:6379
+    volumes:
+      - ./config:/usr/local/etc/redis
+      - node3_data:/data
+    networks:
+      redis:
+        ipv4_address: 172.18.0.4
+
+  redis-node4:
+    image: redis:6.2.7-alpine
+    container_name: redis-node4
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 6382:6379
+    volumes:
+      - ./config:/usr/local/etc/redis
+      - node4_data:/data
+    networks:
+      redis:
+        ipv4_address: 172.18.0.5
+
+  redis-node5:
+    image: redis:6.2.7-alpine
+    container_name: redis-node5
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai   
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 6383:6379
+    volumes:
+      - ./config:/usr/local/etc/redis
+      - node5_data:/data
+    networks:
+      redis:
+        ipv4_address: 172.18.0.6
+
+  redis-node6:
+    image: redis:6.2.7-alpine
+    container_name: redis-node6
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai   
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 6384:6379
+    volumes:
+      - ./config:/usr/local/etc/redis
+      - node6_data:/data
+    networks:
+      redis:
+        ipv4_address: 172.18.0.7
+
+volumes:
+  node1_data:
+  node2_data:
+  node3_data:
+  node4_data:
+  node5_data:
+  node6_data:
+
+networks:
+  redis:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
