@@ -1,0 +1,58 @@
+version: '3.9'
+services:
+  redis-master:
+    image: redis:6.2.7-alpine
+    container_name: redis-master
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 6379:6379
+    volumes:
+      - ./conf/master/redis.conf:/usr/local/etc/redis/redis.conf
+      - master_data:/data
+    networks:
+      - redis
+
+  redis-slave1:
+    image: redis:6.2.7-alpine
+    container_name: redis-slave1
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 6380:6379
+    volumes:
+      - ./conf/slave1/redis.conf:/usr/local/etc/redis/redis.conf
+      - slave1_data:/data
+    links:
+      - redis-master
+    networks:
+      - redis
+
+  redis-slave2:
+    image: redis:6.2.7-alpine
+    container_name: redis-slave2
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 6381:6379
+    volumes:
+      - ./conf/slave2/redis.conf:/usr/local/etc/redis/redis.conf
+      - slave2_data:/data
+    links:
+      - redis-master
+    networks:
+      - redis
+
+volumes:
+  master_data:
+  slave1_data:
+  slave2_data:
+
+networks:
+  redis:
