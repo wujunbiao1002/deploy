@@ -1,0 +1,155 @@
+version: '3.9'
+services:
+  es-node-9211:
+    image: elasticsearch:6.4.2
+    container_name: es-node-9211
+    environment:
+      - cluster.name=elasticsearch-cluster
+      - node.name=es-node-9211
+      - network.host=0.0.0.0
+      - network.publish_host=192.168.0.109
+      - http.port=9211
+      - transport.tcp.port=9311
+      - http.cors.enabled=true
+      - node.master=true
+      - node.data=true
+      - http.cors.allow-origin=*
+      - bootstrap.memory_lock=false
+      - discovery.zen.minimum_master_nodes=1
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - TZ=Asia/Shanghai
+    ulimits:
+     memlock:
+       soft: -1
+       hard: -1
+    volumes:
+      - ./es_node_9211_data:/usr/share/elasticsearch/data
+    ports:
+      - "9211:9211"
+      - "9311:9311"
+    networks:
+      - elastic
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+  es-node-9212:
+    image: elasticsearch:6.4.2
+    container_name: es-node-9212
+    environment:
+      - cluster.name=elasticsearch-cluster
+      - node.name=es-node-9212
+      - network.host=0.0.0.0
+      - network.publish_host=192.168.0.109
+      - http.port=9212
+      - transport.tcp.port=9312
+      - http.cors.enabled=true
+      - node.master=false
+      - node.data=true
+      - http.cors.allow-origin=*
+      - bootstrap.memory_lock=false
+      - discovery.zen.ping.unicast.hosts=192.168.0.109:9311
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - TZ=Asia/Shanghai
+    ulimits:
+     memlock:
+       soft: -1
+       hard: -1
+    volumes:
+      - ./es_node_9212_data:/usr/share/elasticsearch/data
+    ports:
+      - "9212:9212"
+      - "9312:9312"
+    networks:
+      - elastic
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+  es-node-9213:
+    image: elasticsearch:6.4.2
+    container_name: es-node-9213
+    environment:
+      - cluster.name=elasticsearch-cluster
+      - node.name=es-node-9213
+      - network.host=0.0.0.0
+      - network.publish_host=192.168.0.109
+      - http.port=9213
+      - transport.tcp.port=9313
+      - http.cors.enabled=true
+      - node.master=false
+      - node.data=true
+      - http.cors.allow-origin=*
+      - bootstrap.memory_lock=false
+      - discovery.zen.ping.unicast.hosts=192.168.0.109:9311
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - TZ=Asia/Shanghai
+    ulimits:
+     memlock:
+       soft: -1
+       hard: -1
+    volumes:
+      - ./es_node_9213_data:/usr/share/elasticsearch/data
+    ports:
+      - "9213:9213"
+      - "9313:9313"
+    networks:
+      - elastic
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+networks:
+  elastic:
+    driver: bridge
+
+  # logstash:
+  #   image: docker.elastic.co/logstash/logstash:6.4.2
+  #   links:
+  #     - elasticsearch:es
+  #   environment:
+  #     - LS_JAVA_OPTS=-Xms256m -Xmx256m
+  #     - TZ=Asia/Shanghai
+  #   networks:
+  #     - elastic
+  #   deploy:
+  #     replicas: 2
+  # logstash2:
+  #   image: docker.elastic.co/logstash/logstash:6.4.2
+  #   links:
+  #     - elasticsearch:es
+  #   environment:
+  #     - LS_JAVA_OPTS=-Xms256m -Xmx256m
+  #     - TZ=Asia/Shanghai
+  #   networks:
+  #     - elastic
+  #   deploy:
+  #     replicas: 2
+  # logstash3:
+  #   image: docker.elastic.co/logstash/logstash:6.4.2
+  #   links:
+  #     - elasticsearch:es
+  #   environment:
+  #     - LS_JAVA_OPTS=-Xms256m -Xmx256m
+  #     - TZ=Asia/Shanghai
+  #   networks:
+  #     - elastic
+  #   deploy:
+  #     replicas: 2
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:6.4.2
+  #   container_name: kibana
+  #   environment:
+  #     - ELASTICSEARCH_URL=http://192.168.0.109:9200
+  #     - I18N_LOCALE=zh-CN
+  #     - TZ=Asia/Shanghai
+  #   ports:
+  #     - 5601:5601
+  #   networks:
+  #     - elastic
+  #   deploy:
+  #     placement:
+  #       constraints:
+  #         - node.role == manager
+
+
