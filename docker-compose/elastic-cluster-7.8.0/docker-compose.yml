@@ -1,0 +1,87 @@
+version: '3.9'
+services:
+  es-node-9211:
+    image: elasticsearch:7.8.0
+    container_name: es-node-9211
+    restart: always
+    environment:
+      - node.name=es-node-9211
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es-node-9212,es-node-9213
+      - cluster.initial_master_nodes=es-node-9211,es-node-9212,es-node-9213
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - TZ=Asia/Shanghai
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data/es_node_9211_data:/usr/share/elasticsearch/data
+      - ./plugins:/usr/share/elasticsearch/plugins
+    ports:
+      - 9211:9200
+    networks:
+      - elastic
+  es-node-9212:
+    image: elasticsearch:7.8.0
+    container_name: es-node-9212
+    restart: always
+    environment:
+      - node.name=es-node-9212
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es-node-9211,es-node-9213
+      - cluster.initial_master_nodes=es-node-9211,es-node-9212,es-node-9213
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - TZ=Asia/Shanghai
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data/es_node_9212_data:/usr/share/elasticsearch/data
+      - ./plugins:/usr/share/elasticsearch/plugins
+    ports:
+      - 9212:9200
+    networks:
+      - elastic
+  es-node-9213:
+    image: elasticsearch:7.8.0
+    container_name: es-node-9213
+    restart: always
+    environment:
+      - node.name=es-node-9213
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es-node-9211,es-node-9212
+      - cluster.initial_master_nodes=es-node-9211,es-node-9212,es-node-9213
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - TZ=Asia/Shanghai
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data/es_node_9213_data:/usr/share/elasticsearch/data
+      - ./plugins:/usr/share/elasticsearch/plugins
+    ports:
+      - 9213:9200
+    networks:
+      - elastic
+  kibana:
+    image: kibana:7.8.0
+    container_name: kibana
+    environment:
+      - I18N_LOCALE=zh-CN
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./conf/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - 5601:5601
+    networks:
+      - elastic
+
+networks:
+  elastic:
+    driver: bridge
