@@ -13,7 +13,7 @@ services:
       - ./conf/node1_6371:/usr/local/etc/redis
       - node1_6371_data:/data
     networks:
-      redis:
+      redis_net:
         ipv4_address: 172.18.0.71
 
 
@@ -30,7 +30,7 @@ services:
       - ./conf/node1_6372:/usr/local/etc/redis
       - node2_6372_data:/data
     networks:
-      redis:
+      redis_net:
         ipv4_address: 172.18.0.72
 
   redis-node3-6373:
@@ -46,7 +46,7 @@ services:
       - ./conf/node1_6373:/usr/local/etc/redis
       - node3_6373_data:/data
     networks:
-      redis:
+      redis_net:
         ipv4_address: 172.18.0.73
 
   redis-node4-6374:
@@ -62,7 +62,7 @@ services:
       - ./conf/node1_6374:/usr/local/etc/redis
       - node4_6374_data:/data
     networks:
-      redis:
+      redis_net:
         ipv4_address: 172.18.0.74
 
   redis-node5-6375:
@@ -78,7 +78,7 @@ services:
       - ./conf/node1_6375:/usr/local/etc/redis
       - node5_6375_data:/data
     networks:
-      redis:
+      redis_net:
         ipv4_address: 172.18.0.75
 
   redis-node6-6376:
@@ -94,7 +94,7 @@ services:
       - ./conf/node1_6376:/usr/local/etc/redis
       - node6_6376_data:/data
     networks:
-      redis:
+      redis_net:
         ipv4_address: 172.18.0.76
 
 volumes:
@@ -106,7 +106,7 @@ volumes:
   node6_6376_data:
 
 networks:
-  redis:
+  redis_net:
     driver: bridge
     ipam:
       config:

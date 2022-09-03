@@ -28,7 +28,7 @@ services:
       - "9211:9211"
       - "9311:9311"
     networks:
-      - elastic
+      - elastic_net
     deploy:
       placement:
         constraints:
@@ -61,7 +61,7 @@ services:
       - "9212:9212"
       - "9312:9312"
     networks:
-      - elastic
+      - elastic_net
     deploy:
       placement:
         constraints:
@@ -94,13 +94,13 @@ services:
       - "9213:9213"
       - "9313:9313"
     networks:
-      - elastic
+      - elastic_net
     deploy:
       placement:
         constraints:
           - node.role == worker
 networks:
-  elastic:
+  elastic_net:
     driver: bridge
 
 

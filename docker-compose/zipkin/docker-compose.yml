@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 9411:9411
+    networks:
+      - zipkin_net
+
+networks:
+  zipkin_net:
+    driver: bridge

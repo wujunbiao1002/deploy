@@ -13,8 +13,8 @@ services:
     volumes:
       - ./data:/usr/share/elasticsearch/data
     networks:
-      - elastic
+      - elastic_net
       
 networks:
-  elastic:
+  elastic_net:
     driver: bridge

@@ -13,8 +13,8 @@ services:
       - ./conf/redis.conf:/usr/local/etc/redis/redis.conf
       - ./data:/data
     networks:
-      - redis
+      - redis_net
 
 networks:
-  redis:
+  redis_net:
     driver: bridge

@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  consul:
+    image: consul:1.6.10
+    container_name: consul
+    restart: always
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+      - TZ=Asia/Shanghai
+    volumes:
+      # - ./config:/consul/config
+      - ./data:/consul/data
+    command: ["consul","agent","-server","-bootstrap","-data-dir","/consul/data","-ui","-bind","127.0.0.1","-client","0.0.0.0"]
+    ports:
+      - 8500:8500
+    networks: 
+      - consul_net
+networks:
+  consul_net:
+    driver: bridge

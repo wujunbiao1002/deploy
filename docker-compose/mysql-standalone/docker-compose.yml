@@ -13,8 +13,8 @@ services:
       - ./conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
       - ./data:/var/lib/mysql
     networks:
-      - mysql
+      - mysql_net
 
 networks:
-   mysql:
+   mysql_net:
     driver: bridge

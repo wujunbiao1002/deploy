@@ -13,7 +13,7 @@ services:
       - ./conf/master/redis.conf:/usr/local/etc/redis/redis.conf
       - master_data:/data
     networks:
-      - redis
+      - redis_net
 
   redis-slave1:
     image: redis:6.2.7-alpine
@@ -30,7 +30,7 @@ services:
     links:
       - redis-master
     networks:
-      - redis
+      - redis_net
 
   redis-slave2:
     image: redis:6.2.7-alpine
@@ -47,7 +47,7 @@ services:
     links:
       - redis-master
     networks:
-      - redis
+      - redis_net
 
 volumes:
   master_data:
@@ -55,5 +55,5 @@ volumes:
   slave2_data:
 
 networks:
-  redis:
+  redis_net:
     driver: bridge

@@ -1,0 +1,19 @@
+version: '3.9'
+services:
+  zookeeper:
+    image: zookeeper:3.5.9
+    container_name: zookeeper
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 2181:2181
+    volumes:
+      - ./data:/data
+      - ./datalog:/datalog
+      # - ./conf/zoo.cfg:/conf/zoo.cfg
+    networks:
+      - zookeeper_net
+networks:
+  zookeeper_net:
+    driver: bridge

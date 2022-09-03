@@ -22,7 +22,7 @@ services:
     ports:
       - 9211:9200
     networks:
-      - elastic
+      - elastic_net
   es-node-9212:
     image: elasticsearch:7.8.0
     container_name: es-node-9212
@@ -45,7 +45,7 @@ services:
     ports:
       - 9212:9200
     networks:
-      - elastic
+      - elastic_net
   es-node-9213:
     image: elasticsearch:7.8.0
     container_name: es-node-9213
@@ -68,7 +68,7 @@ services:
     ports:
       - 9213:9200
     networks:
-      - elastic
+      - elastic_net
   kibana:
     image: kibana:7.8.0
     container_name: kibana
@@ -80,8 +80,8 @@ services:
     ports:
       - 5601:5601
     networks:
-      - elastic
+      - elastic_net
 
 networks:
-  elastic:
+  elastic_net:
     driver: bridge
