@@ -1,0 +1,141 @@
+version: "3.9"
+services:
+  mysql: # nacos2.X版本需要手动更新一下sql
+    container_name: mysql
+    image: nacos/nacos-mysql:5.7
+    env_file:
+      - ./env/mysql.env
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "3307:3306"
+
+  nacos1:
+    hostname: nacos1
+    container_name: nacos1
+    image: nacos/nacos-server:${NACOS_VERSION}
+    restart: always
+    volumes:
+      - ./conf/nacos/application.properties:/home/nacos/conf/application.properties
+      - ./logs/nacos1:/home/nacos/logs
+    env_file:
+      - ./env/nacos-hostname.env
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - mysql
+
+  nacos2:
+    hostname: nacos2
+    image: nacos/nacos-server:${NACOS_VERSION}
+    container_name: nacos2
+    restart: always
+    volumes:
+      - ./conf/nacos/application.properties:/home/nacos/conf/application.properties
+      - ./logs/nacos2:/home/nacos/logs
+    env_file:
+      - ./env/nacos-hostname.env
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - mysql
+
+  nacos3:
+    hostname: nacos3
+    image: nacos/nacos-server:${NACOS_VERSION}
+    container_name: nacos3
+    restart: always
+    volumes:
+      - ./conf/nacos/application.properties:/home/nacos/conf/application.properties
+      - ./logs/nacos3:/home/nacos/logs
+    env_file:
+      - ./env/nacos-hostname.env
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - mysql
+
+  nacos-nginx:
+    container_name: nacos-nginx
+    image: nginx
+    restart: always
+    volumes:
+      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "8848:80"
+    depends_on:
+      - nacos1
+      - nacos2
+      - nacos3
+
+  seata-server1:
+    container_name: seata-server1
+    image: seataio/seata-server:${SEATA_VERSION}
+    hostname: seata-server1
+    restart: always
+    environment:
+      - SEATA_PORT=8091
+      - SEATA_IP=192.168.0.109 # 容器化启动必须指定外部IP
+      - SEATA_CONFIG_NAME=file:/root/seata-config/registry
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./conf/seata:/root/seata-config
+      - ./logs/seata-server1:/root/logs
+    ports:
+      - 8091:8091
+    depends_on:
+      - mysql
+      - nacos-nginx
+
+  seata-server2:
+    container_name: seata-server2
+    image: seataio/seata-server:${SEATA_VERSION}
+    hostname: seata-server2
+    restart: always
+    environment:
+      - SEATA_PORT=8092
+      - SEATA_CONFIG_NAME=file:/root/seata-config/registry
+      - TZ=Asia/Shanghai
+      - SEATA_IP=192.168.0.109 # 容器化启动必须指定外部IP
+    volumes:
+      - ./conf/seata:/root/seata-config
+      - ./logs/seata-server2:/root/logs
+    ports:
+      - 8092:8092
+    depends_on:
+      - mysql
+      - nacos-nginx
+
+  seata-server3:
+    container_name: seata-server3
+    image: seataio/seata-server:${SEATA_VERSION}
+    hostname: seata-server3
+    restart: always
+    environment:
+      - SEATA_PORT=8093
+      - SEATA_CONFIG_NAME=file:/root/seata-config/registry
+      - TZ=Asia/Shanghai
+      - SEATA_IP=192.168.0.109 # 容器化启动必须指定外部IP
+    volumes:
+      - ./conf/seata:/root/seata-config
+      - ./logs/seata-server3:/root/logs
+    ports:
+      - 8093:8093
+    depends_on:
+      - mysql
+      - nacos-nginx
+
+  sentinel-dashboard:
+    container_name: sentinel-dashboard
+    image: bladex/sentinel-dashboard:${SENTINEL_VERSION}
+    restart: always
+    environment:
+      - sentinel.dashboard.auth.username=admin
+      - sentinel.dashboard.auth.password=12345678
+      - TZ=Asia/Shanghai
+    ports:
+      - 8858:8858
